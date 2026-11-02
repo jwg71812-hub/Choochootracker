@@ -675,7 +675,7 @@ int gfxSetup(int *screenWidth, int *screenHeight) {
   }
 
   // Also covers older SDL2 builds without SDL_SetTextureScaleMode.
-  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
   // Prefer a VSync'd GPU renderer. The composition target below removes any
   // dependency on the platform retaining window-backbuffer contents.
