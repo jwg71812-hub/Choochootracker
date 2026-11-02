@@ -10,13 +10,13 @@ jobs:
   android:
     name: Build Android APKs
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: true
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -24,28 +24,27 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+
       - name: Install Android SDK and NDK
         run: |
-          # Se usan las herramientas preinstaladas de Ubuntu que son 100% estables
-          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;35.0.0" "ndk;30.0.16248370"
+          sdkmanager "platforms;android-36" "build-tools;35.0.0" "ndk;30.0.16248370"
 
       - name: Prepare SDL2 headers
         run: |
-          curl --fail --location --retry 3 --output /tmp/SDL2.tar.gz \
+          curl --fail --location --output /tmp/SDL2.tar.gz \
             https://github.com/libsdl-org/SDL/releases/download/release-2.32.10/SDL2-2.32.10.tar.gz
           mkdir -p .tmp/SDL2-2.32.10/SDL2
           tar -xzf /tmp/SDL2.tar.gz -C /tmp
           cp -r /tmp/SDL2-2.32.10/include/. .tmp/SDL2-2.32.10/SDL2/
 
-      - name: Build native libraries (ARM64)
+      - name: Build native libraries
         run: |
           export ANDROID_NDK_ROOT="$ANDROID_HOME/ndk/30.0.16248370"
           make -C tracker -f Makefile.android android ARCH=arm64-v8a
-
-      - name: Build native libraries (ARMv7)
-        run: |
-          export ANDROID_NDK_ROOT="$ANDROID_HOME/ndk/30.0.16248370"
           make -C tracker -f Makefile.android android ARCH=armeabi-v7a
 
       - name: Build Store and Direct Debug APKs
