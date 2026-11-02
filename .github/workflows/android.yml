@@ -1,4 +1,3 @@
-
 name: Android Debug APK
 
 on:
@@ -25,12 +24,11 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Android SDK and NDK
         run: |
-          sdkmanager "platforms;android-36" "build-tools;35.0.0" "ndk;30.0.16248370"
+          # Se usan las herramientas preinstaladas de Ubuntu que son 100% estables
+          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;35.0.0" "ndk;30.0.16248370"
 
       - name: Prepare SDL2 headers
         run: |
