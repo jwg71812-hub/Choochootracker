@@ -33,7 +33,7 @@ jobs:
       - name: Prepare SDL2 headers
         run: |
           curl --fail --location --output /tmp/SDL2.tar.gz \
-            https://github.com
+            https://libsdl.org
           mkdir -p .tmp/SDL2-2.32.10/SDL2
           tar -xzf /tmp/SDL2.tar.gz -C /tmp
           cp -r /tmp/SDL2-2.32.10/include/. .tmp/SDL2-2.32.10/SDL2/
